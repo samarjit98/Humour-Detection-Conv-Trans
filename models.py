@@ -318,7 +318,7 @@ class CNN2(nn.Module):
         x = x.permute(0, 2, 1)
 
         x = x.permute(1, 0, 2)
-        x = self.attn2_1(x)
+        x = self.attn2(x)
         x = x.permute(1, 0, 2)
 
         x = x.permute(0, 2, 1)
