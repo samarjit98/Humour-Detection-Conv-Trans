@@ -97,8 +97,8 @@ class AttentionModel2(nn.Module):
 class CNN(nn.Module):
 
     def __init__(self, 
-                num_chars=67, 
-                embedding_dim=256, 
+                num_chars=38, 
+                embedding_dim=128, 
                 labels=2):
         super(CNN, self).__init__()
 
@@ -115,12 +115,8 @@ class CNN(nn.Module):
                                 nn.MaxPool1d(3),
                                 nn.Dropout(),
                             )
-        self.attn1_1 = nn.TransformerEncoderLayer(256, 8, 
-                                                dim_feedforward=1024, 
-                                                dropout=0.5, 
-                                                activation='relu')
-        self.attn1_2 = nn.TransformerEncoderLayer(256, 8, 
-                                                dim_feedforward=1024, 
+        self.attn1 = nn.TransformerEncoderLayer(128, 8, 
+                                                dim_feedforward=512, 
                                                 dropout=0.5, 
                                                 activation='relu')
         self.convnet2 = nn.Sequential(
@@ -130,8 +126,8 @@ class CNN(nn.Module):
                                 nn.MaxPool1d(3),
                                 nn.Dropout(),
                             )
-        self.attn2 = nn.TransformerEncoderLayer(256, 8, 
-                                                dim_feedforward=1024, 
+        self.attn2 = nn.TransformerEncoderLayer(128, 8, 
+                                                dim_feedforward=512, 
                                                 dropout=0.5, 
                                                 activation='relu')
         self.convnet3 = nn.Sequential(
@@ -152,8 +148,7 @@ class CNN(nn.Module):
         x = x.permute(0, 2, 1)
 
         x = x.permute(1, 0, 2)
-        x = self.attn1_1(x)
-        x = self.attn1_2(x)
+        x = self.attn1(x)
         x = x.permute(1, 0, 2)
 
         x = x.permute(0, 2, 1)
@@ -250,7 +245,7 @@ class CNN2(nn.Module):
 
         return self.label(x)
 
-
+'''
 class CNN2(nn.Module):
 
     def __init__(self, 
@@ -328,4 +323,4 @@ class CNN2(nn.Module):
         x = x.reshape((this_batch, -1))
 
         return self.label(x)
-
+'''

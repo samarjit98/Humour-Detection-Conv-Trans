@@ -21,7 +21,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 criterion = nn.CrossEntropyLoss()
 
 print('==> Creating networks..')
-model = CNN2(num_chars=67).to(device)
+model = CNN(num_chars=67).to(device)
 params = model.parameters()
 optimizer = optim.Adam(params, lr=args.lr)
 
@@ -63,7 +63,7 @@ def train(currepoch, epoch):
         del targets
         gc.collect()
         torch.cuda.empty_cache()
-        torch.save(model.state_dict(), './weights_cnn/network_train.ckpt')
+        torch.save(model.state_dict(), './weights_cnn_deeper/network_train.ckpt')
         with open("./information/network_info.txt", "w+") as f:
             f.write("{} {}".format(currepoch, batch_idx))
         print('Batch: [{}/{}], Loss: {}, Train Loss: {:.4f} , Acc: {:.4f} ({}/{})'\
@@ -75,7 +75,7 @@ def train(currepoch, epoch):
                                                                                     correct, \
                                                                                     total), end='\r')
 
-    torch.save(model.state_dict(), './checkpoints_cnn/network_train_epoch_{}.ckpt'.format(currepoch + 1))
+    torch.save(model.state_dict(), './checkpoints_cnn_deeper/network_train_epoch_{}.ckpt'.format(currepoch + 1))
     print('\n=> Classifier Network Train: Epoch [{}/{}], Loss:{:.4f}'\
                                                                 .format(currepoch+1,\
                                                                         epoch,\
