@@ -21,7 +21,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 criterion = nn.CrossEntropyLoss()
 
 print('==> Creating networks..')
-model = CNN().to(device)
+model = CNN2().to(device)
 params = model.parameters()
 optimizer = optim.Adam(params, lr=args.lr)
 
