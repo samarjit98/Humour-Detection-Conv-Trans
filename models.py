@@ -325,14 +325,25 @@ class CNN2(nn.Module):
         return self.label(x)
 '''
 
+'''
+The following are implemented by Himadyuti Bhanja
+'''
+
 class CharRNN(nn.Module):
-    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=1):
+    def __init__(self, 
+                num_chars=38, 
+                embedding_dim=128, 
+                labels=2, 
+                n_layers=1):
 
         super(CharRNN, self).__init__()
         self.n_layers = n_layers
         self.hidden_dim = embedding_dim
         self.embedding = nn.Embedding(num_chars, embedding_dim)
-        self.rnn = nn.RNN(embedding_dim, embedding_dim, n_layers, batch_first = True)
+        self.rnn = nn.RNN(embedding_dim, 
+                            embedding_dim, 
+                            n_layers, 
+                            batch_first = True)
         self.label = nn.Linear(embedding_dim, labels)
 
     def forward(self, x):
@@ -343,13 +354,22 @@ class CharRNN(nn.Module):
 
 
 class CharLSTM(nn.Module):
-    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=2, hidden_dim = 128):
+    def __init__(self, 
+                num_chars=38, 
+                embedding_dim=128, 
+                labels=2, 
+                n_layers=2, 
+                hidden_dim = 128):
 
         super(CharLSTM, self).__init__()
         self.n_layers = n_layers
         self.hidden_dim = hidden_dim
         self.embedding = nn.Embedding(num_chars, embedding_dim)
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim, n_layers, dropout = 0.2, batch_first = True)
+        self.lstm = nn.LSTM(embedding_dim, 
+                                hidden_dim, 
+                                n_layers, 
+                                dropout = 0.2, 
+                                batch_first = True)
         self.label = nn.Linear(hidden_dim, labels)
 
     def forward(self, x):
@@ -360,13 +380,22 @@ class CharLSTM(nn.Module):
 
 
 class CharGRU(nn.Module):
-    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=2, hidden_dim = 128):
+    def __init__(self, 
+                num_chars=38, 
+                embedding_dim=128, 
+                labels=2, 
+                n_layers=2, 
+                hidden_dim = 128):
 
         super(CharGRU, self).__init__()
         self.n_layers = n_layers
         self.hidden_dim = hidden_dim
         self.embedding = nn.Embedding(num_chars, embedding_dim)
-        self.gru = nn.GRU(embedding_dim, hidden_dim, n_layers, dropout = 0.2, batch_first = True)
+        self.gru = nn.GRU(embedding_dim, 
+                            hidden_dim, 
+                            n_layers, 
+                            dropout = 0.2, 
+                            batch_first = True)
         self.label = nn.Linear(hidden_dim, labels)
 
     def forward(self, x):
@@ -377,7 +406,11 @@ class CharGRU(nn.Module):
         
 
 class SubwordLSTM(nn.Module):
-    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=2):
+    def __init__(self, 
+                num_chars=38, 
+                embedding_dim=128, 
+                labels=2, 
+                n_layers=2):
 
         super(SubwordLSTM, self).__init__()
         self.n_layers = n_layers
@@ -389,7 +422,11 @@ class SubwordLSTM(nn.Module):
                                 nn.MaxPool1d(3),
                                 nn.Dropout(0.2)
                             )
-        self.lstm = nn.LSTM(embedding_dim, embedding_dim, n_layers, dropout = 0.2, batch_first = True)
+        self.lstm = nn.LSTM(embedding_dim, 
+                            embedding_dim, 
+                            n_layers, 
+                            dropout = 0.2, 
+                            batch_first = True)
         self.label = nn.Linear(embedding_dim, labels)
 
     def forward(self, x):
