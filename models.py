@@ -324,3 +324,81 @@ class CNN2(nn.Module):
 
         return self.label(x)
 '''
+
+class CharRNN(nn.Module):
+    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=1):
+
+        super(CharRNN, self).__init__()
+        self.n_layers = n_layers
+        self.hidden_dim = embedding_dim
+        self.embedding = nn.Embedding(num_chars, embedding_dim)
+        self.rnn = nn.RNN(embedding_dim, embedding_dim, n_layers, batch_first = True)
+        self.label = nn.Linear(embedding_dim, labels)
+
+    def forward(self, x):
+        this_batch = x.shape[0]
+        x = self.embedding(x)   
+        x, _ = self.rnn(x)
+        return self.label(x[:, -1, :])
+
+
+class CharLSTM(nn.Module):
+    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=2, hidden_dim = 128):
+
+        super(CharLSTM, self).__init__()
+        self.n_layers = n_layers
+        self.hidden_dim = hidden_dim
+        self.embedding = nn.Embedding(num_chars, embedding_dim)
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, n_layers, dropout = 0.2, batch_first = True)
+        self.label = nn.Linear(hidden_dim, labels)
+
+    def forward(self, x):
+        this_batch = x.shape[0]
+        x = self.embedding(x)   
+        x, _ = self.lstm(x)
+        return self.label(x[:, -1, :])
+
+
+class CharGRU(nn.Module):
+    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=2, hidden_dim = 128):
+
+        super(CharGRU, self).__init__()
+        self.n_layers = n_layers
+        self.hidden_dim = hidden_dim
+        self.embedding = nn.Embedding(num_chars, embedding_dim)
+        self.gru = nn.GRU(embedding_dim, hidden_dim, n_layers, dropout = 0.2, batch_first = True)
+        self.label = nn.Linear(hidden_dim, labels)
+
+    def forward(self, x):
+        this_batch = x.shape[0]
+        x = self.embedding(x)   
+        x, _ = self.gru(x)
+        return self.label(x[:, -1, :])
+        
+
+class SubwordLSTM(nn.Module):
+    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=2):
+
+        super(SubwordLSTM, self).__init__()
+        self.n_layers = n_layers
+        self.hidden_dim = embedding_dim
+        self.embedding = nn.Embedding(num_chars, embedding_dim)
+        self.convnet = nn.Sequential(
+                                nn.Conv1d(embedding_dim, embedding_dim, 3, padding=1),
+                                nn.ReLU(),
+                                nn.MaxPool1d(3),
+                                nn.Dropout(0.2)
+                            )
+        self.lstm = nn.LSTM(embedding_dim, embedding_dim, n_layers, dropout = 0.2, batch_first = True)
+        self.label = nn.Linear(embedding_dim, labels)
+
+    def forward(self, x):
+        this_batch = x.shape[0]
+        x = self.embedding(x)  
+        x = x.permute(0, 2, 1)
+        x = self.convnet(x)
+        x = x.permute(0, 2, 1) 
+        x, _ = self.lstm(x)
+        return self.label(x[:, -1, :])
+
+

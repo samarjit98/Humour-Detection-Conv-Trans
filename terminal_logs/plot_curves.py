@@ -9,8 +9,8 @@ for f in files:
 	if '.pkl' in f and 'loss' not in f:
 		file_handler = open(f, 'rb+')
 		train_acc, test_acc = pickle.load(file_handler)
-		train_acc = gaussian_filter1d(train_acc[:65], sigma=1)
-		test_acc = gaussian_filter1d(test_acc[:65], sigma=1)
+		train_acc = gaussian_filter1d(train_acc[:185], sigma=1)
+		test_acc = gaussian_filter1d(test_acc[:185], sigma=1)
 		file_handler.close()
 		train_x = list(range(1, len(train_acc) + 1))
 		test_x = list(range(1, len(test_acc) + 1))
@@ -29,8 +29,8 @@ for f in files:
 		train_loss, test_loss = pickle.load(file_handler)
 		file_handler.close()
 
-		train_loss = gaussian_filter1d(train_loss[:60], sigma=1)
-		test_loss = gaussian_filter1d(test_loss[:60], sigma=1)
+		train_loss = gaussian_filter1d(train_loss[:180], sigma=1)
+		test_loss = gaussian_filter1d(test_loss[:180], sigma=1)
 		train_x = list(range(1, len(train_loss) + 1))
 		test_x = list(range(1, len(test_loss) + 1))
 		plt.figure()
