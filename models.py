@@ -439,3 +439,93 @@ class SubwordLSTM(nn.Module):
         return self.label(x[:, -1, :])
 
 
+class SubwordLSTMAttn(nn.Module):
+    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=2):
+
+        super(SubwordLSTMAttn, self).__init__()
+        self.n_layers = n_layers
+        self.hidden_dim = embedding_dim
+    
+        self.embedding = nn.Embedding(num_chars, embedding_dim)
+        self.convnet = nn.Sequential(
+                                nn.Conv1d(embedding_dim, embedding_dim, 3, padding=1),
+                                nn.ReLU(),
+                                nn.MaxPool1d(3),
+                                nn.Dropout(0.5)
+                            )
+        self.bilstm = nn.LSTM(embedding_dim, self.hidden_dim, 2, dropout = 0.5, bidirectional=True)
+        self.W_s1 = nn.Linear(2*self.hidden_dim, 100)
+        self.W_s2 = nn.Linear(100, 30)
+        self.fc_layer = nn.Linear(30*2*self.hidden_dim, 100)
+        self.label = nn.Linear(100, labels)
+
+    def attention_net(self, lstm_output):
+        attn_weight_matrix = self.W_s2(torch.tanh(self.W_s1(lstm_output)))
+        attn_weight_matrix = attn_weight_matrix.permute(0, 2, 1)
+        attn_weight_matrix = F.softmax(attn_weight_matrix, dim=2)
+
+        return attn_weight_matrix
+
+
+    def forward(self, x):
+        x = self.embedding(x)
+        x = x.permute(0, 2, 1)
+        x = self.convnet(x)
+        x = x.permute(0, 2, 1)
+        x = x.permute(1, 0, 2)
+        output, _ = self.bilstm(x)
+        output = output.permute(1, 0, 2)
+        attn_weight_matrix = self.attention_net(output)
+        hidden_matrix = torch.bmm(attn_weight_matrix, output)
+        fc_out = self.fc_layer(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2]))
+        logits = self.label(fc_out)
+
+        return logits
+
+
+class SubwordLSTMAttn2(nn.Module):
+    def __init__(self, num_chars=38, embedding_dim=128, labels=2, n_layers=2):
+
+        super(SubwordLSTMAttn2, self).__init__()
+        self.n_layers = n_layers
+        self.hidden_dim = embedding_dim
+    
+        self.embedding = nn.Embedding(num_chars, embedding_dim)
+        self.convnet = nn.Sequential(
+                                nn.Conv1d(embedding_dim, embedding_dim, 3, padding=1),
+                                nn.ReLU(),
+                                nn.MaxPool1d(3),
+                                nn.Dropout(),
+                                nn.Conv1d(embedding_dim, embedding_dim, 3, padding=1),
+                                nn.ReLU(),
+                                nn.MaxPool1d(3),
+                                nn.Dropout(),
+                            )
+        self.bilstm = nn.LSTM(embedding_dim, self.hidden_dim, 2, dropout = 0.5, bidirectional=True)
+        self.W_s1 = nn.Linear(2*self.hidden_dim, 100)
+        self.W_s2 = nn.Linear(100, 30)
+        self.fc_layer = nn.Linear(30*2*self.hidden_dim, 100)
+        self.label = nn.Linear(100, labels)
+
+    def attention_net(self, lstm_output):
+        attn_weight_matrix = self.W_s2(torch.tanh(self.W_s1(lstm_output)))
+        attn_weight_matrix = attn_weight_matrix.permute(0, 2, 1)
+        attn_weight_matrix = F.softmax(attn_weight_matrix, dim=2)
+
+        return attn_weight_matrix
+
+
+    def forward(self, x):
+        x = self.embedding(x)
+        x = x.permute(0, 2, 1)
+        x = self.convnet(x)
+        x = x.permute(0, 2, 1)
+        x = x.permute(1, 0, 2)
+        output, _ = self.bilstm(x)
+        output = output.permute(1, 0, 2)
+        attn_weight_matrix = self.attention_net(output)
+        hidden_matrix = torch.bmm(attn_weight_matrix, output)
+        fc_out = self.fc_layer(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2]))
+        logits = self.label(fc_out)
+
+        return logits

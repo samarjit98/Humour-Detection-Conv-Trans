@@ -32,3 +32,23 @@ Subword LSTM filtered:
 	MAX ACC:  66.178
 	MAX AT:  180
 	AVG ACC:  62.64008499999999
+
+Subword LSTM(1 layer) with Attention filtered: (Dropout = 0.2)
+	MAX ACC:  71.303
+	MAX AT:  131
+	AVG ACC:  68.28142499999994
+
+Subword LSTM(2 layers) with Attention filtered: (Dropout = 0.2)
+	MAX ACC:  71.595
+	MAX AT:  114
+	AVG ACC:  68.18915499999994
+
+Subword LSTM(2 layers) with Attention filtered: (Dropout = 0.5)
+	MAX ACC:  71.595
+	MAX AT:  120
+	AVG ACC:  67.25868499999993
+
+Subword LSTM (2,2) with Attention filtered: (Dropout = 0.5)
+	MAX ACC:  72.035
+	MAX AT:  126
+	AVG ACC:  68.62766499999996
