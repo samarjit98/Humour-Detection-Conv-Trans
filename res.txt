@@ -1,0 +1,34 @@
+CharRNN raw:
+	MAX ACC:  52.267
+	MAX AT:  152
+	AVG ACC:  49.94650253807111
+
+CharRNN filtered:
+	MAX ACC:  54.904
+	MAX AT:  36
+	AVG ACC:  50.14305999999996
+
+CharLSTM raw:
+
+CharLSTM filtered: (with 0.6 dropout)
+	MAX ACC:  65.446
+	MAX AT:  128
+	AVG ACC:  59.71550499999999
+
+
+CharGRU raw:
+	MAX ACC:  60.672
+	MAX AT:  81
+	AVG ACC:  50.775511363636355
+
+CharGRU filtered:
+	MAX ACC:  59.004
+	MAX AT:  6
+	AVG ACC:  53.42823497267761
+
+Subword LSTM raw:
+
+Subword LSTM filtered:
+	MAX ACC:  66.178
+	MAX AT:  180
+	AVG ACC:  62.64008499999999
