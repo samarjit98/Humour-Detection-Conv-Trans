@@ -6,7 +6,7 @@ import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from models import *
-from dataset import *
+from dataset_filtered import *
 
 parser = argparse.ArgumentParser(description='PyTorch Humor Classification')
 parser.add_argument('--lr', default=1e-3, type=float, help='learning rate') 
